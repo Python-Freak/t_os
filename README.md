@@ -19,8 +19,24 @@ The blog covers a wide range of topics related to operating systems and low-leve
 ## Target Audience
 This blog is primarily aimed at developers interested in systems programming, kernel development, or those seeking to deepen their understanding of operating systems internals. It assumes a basic familiarity with programming concepts and the Rust programming language, although beginners can also benefit from the detailed explanations provided.
 
+## Dependencies
+- [QEMU](https://www.qemu.org/): QEMU is a free and open-source emulator. It emulates a computer's processor through dynamic binary translation and provides a set of different hardware and device models for the machine, enabling it to run a variety of guest operating systems.
+
+- [Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html): Cargo is the Rust package manager. Cargo downloads your Rust package’s dependencies, compiles your packages, makes distributable packages, and uploads them to crates.io, the Rust community’s package registry. 
+
 ## How to Use
-Readers can follow along with the blog posts sequentially, starting from the introductory articles and progressing through each topic. Each post typically contains theoretical explanations, accompanied by code snippets and practical exercises. Readers are encouraged to experiment with the code examples and explore further on their own.
+- Clone the repo
+```
+git clone https://github.com/Python-Freak/t_os.git
+```
+- Navigate to directory
+```
+cd t_os
+```
+- Run the project
+```
+cargo run
+```
 
 ## Additional Resources
 - [Rust Programming Language](https://www.rust-lang.org/): Official website for the Rust programming language, containing documentation, tutorials, and resources for learning Rust.
