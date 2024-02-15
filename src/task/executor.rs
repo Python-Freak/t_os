@@ -65,6 +65,7 @@ impl Executor {
         }
     }
     pub fn run(&mut self) -> ! {
+        #[allow(unused_must_use)]
         loop {
             self.run_ready_tasks();
             self.sleep_if_idle();

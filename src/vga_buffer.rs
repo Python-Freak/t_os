@@ -74,6 +74,9 @@ impl Writer {
             0x0e => {
                 self.write_byte(b'b');
             }
+            0x08 => {
+                self.remove_last_byte();
+            }
             byte => {
                 if self.column_position >= BUFFER_WIDTH {
                     self.new_line();
@@ -98,6 +101,47 @@ impl Writer {
                 0x20..=0x7e | b'\n' => self.write_byte(byte),
                 byte => self.write_byte(byte),
             }
+        }
+    }
+
+    fn remove_last_byte(&mut self) {
+        if self.column_position > 0 {
+            self.column_position -= 1;
+            self.write_byte(b' ');
+            self.column_position -= 1;
+        } else {
+            self.move_down();
+            // self.column_position = BUFFER_WIDTH - 1;
+            self.set_col_pos();
+        }
+    }
+
+    fn set_col_pos(&mut self) {
+        self.column_position = BUFFER_WIDTH - 1;
+        while (self.column_position as i8) >= 0 {
+            let current = self.buffer.chars[BUFFER_HEIGHT - 1][self.column_position]
+                .read()
+                .ascii_character as u8;
+            match current {
+                0x21..=0x7e => {
+                    break;
+                }
+                _ => {
+                    self.column_position -= 1;
+                }
+            }
+        }
+        self.column_position += 1;
+    }
+
+    fn move_down(&mut self) {
+        let mut row: i8 = (BUFFER_HEIGHT - 2) as i8;
+        while row >= 0 {
+            for col in 0..BUFFER_WIDTH {
+                let ch: ScreenChar = self.buffer.chars[row as usize][col].read();
+                self.buffer.chars[(row + 1) as usize][col].write(ch);
+            }
+            row -= 1;
         }
     }
 

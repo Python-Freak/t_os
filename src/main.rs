@@ -27,11 +27,7 @@ fn kernel_main(_boot_info: &'static BootInfo) -> ! {
     allocator::init_heap(&mut mapper, &mut frame_allocator).expect("heap initialization failed");
 
     let mut executor = Executor::new();
-    executor.spawn(Task::new(infinite_loop()));
     executor.spawn(Task::new(keyboard::print_keypresses()));
-
-    let mut new_executor = Executor::new();
-    new_executor.spawn(Task::new(example_task()));
 
     change_color(ColorCode::new(Color::Green, Color::Black));
     println!("OS Loaded Successfully !");
@@ -50,16 +46,6 @@ fn panic(info: &PanicInfo) -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     t_os::test_panic_handler(info)
-}
-
-async fn example_task() {
-    println!("async number: {}", 42);
-}
-
-async fn infinite_loop() {
-    for _ in 0..10 {
-        println!("LOOPING");
-    }
 }
 
 #[test_case]
