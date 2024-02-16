@@ -31,6 +31,8 @@ fn kernel_main(_boot_info: &'static BootInfo) -> ! {
 
     change_color(ColorCode::new(Color::Green, Color::Black));
     println!("OS Loaded Successfully !");
+    // println!("{}", tlang::evalute("1+3-1"));
+
     reset_color();
     executor.run();
 }

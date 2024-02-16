@@ -1,3 +1,4 @@
+use alloc::string::String;
 use core::fmt;
 use lazy_static::lazy_static;
 use spin::Mutex;
@@ -84,7 +85,6 @@ impl Writer {
 
                 let row = BUFFER_HEIGHT - 1;
                 let col = self.column_position;
-
                 let color_code = self.color_code;
                 self.buffer.chars[row][col].write(ScreenChar {
                     ascii_character: byte,
@@ -111,7 +111,6 @@ impl Writer {
             self.column_position -= 1;
         } else {
             self.move_down();
-            // self.column_position = BUFFER_WIDTH - 1;
             self.set_col_pos();
         }
     }
@@ -146,14 +145,33 @@ impl Writer {
     }
 
     fn new_line(&mut self) {
+        let mut command = String::from("");
+        for col in 0..=self.column_position {
+            command.push(
+                self.buffer.chars[BUFFER_HEIGHT - 1][col]
+                    .read()
+                    .ascii_character as char,
+            );
+        }
+        self.move_up();
+        self.clear_row(BUFFER_HEIGHT - 1);
+        self.column_position = 0;
+
+        self.color_code = ColorCode::new(Color::Green, Color::Black);
+        self.write_string(&command);
+        self.color_code = ColorCode::new(Color::White, Color::Black);
+        self.move_up();
+        self.clear_row(BUFFER_HEIGHT - 1);
+        self.column_position = 0;
+    }
+
+    fn move_up(&mut self) {
         for row in 1..BUFFER_HEIGHT {
             for col in 0..BUFFER_WIDTH {
                 let character = self.buffer.chars[row][col].read();
                 self.buffer.chars[row - 1][col].write(character);
             }
         }
-        self.clear_row(BUFFER_HEIGHT - 1);
-        self.column_position = 0;
     }
 
     fn clear_row(&mut self, row: usize) {
